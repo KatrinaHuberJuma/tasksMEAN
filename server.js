@@ -8,7 +8,7 @@ const app = express();
 // APP SETTINGS
 // =============================================
 app.use(express.urlencoded({extended: true}));
-app.use(express.static(__dirname + "/static"));
+app.use(express.static( __dirname + '/public/dist/public' ));
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/client/views');
