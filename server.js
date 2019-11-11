@@ -38,6 +38,7 @@ const Task = mongoose.model('Task', TaskSchema);
 
 
 app.get('/tasks', (request, response) => {
+    console.log("-----------------------------------server get route called")
     Task.find({})
         .then(tasks => response.json(tasks))
         .catch(err => response.json(err));
