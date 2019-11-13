@@ -1,9 +1,13 @@
- <button (click)="getTasksFromService()">see tasks</button>
+<div class="root"><app-task-detail *ngIf="currentTask" [taskToShow]="currentTask"></app-task-detail></div>
+<button (click)="getTasksFromService()">see tasks</button>
 
     <ul>
       <li *ngFor="let task of tasks">{{task.title}} {{task.description}}<button (click)="getOneTaskFromService(task._id)">edit task</button><button (click)="deleteOneTaskFromService(task._id)">delete task</button>
 </li>
     </ul>
+
+
+
 
 <div *ngIf="displayEdit; then editing; else creating">
 </div>
