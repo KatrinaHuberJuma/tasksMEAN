@@ -4,11 +4,13 @@
 const mongoose = require('mongoose');
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 // =============================================
 // APP SETTINGS
 // =============================================
 app.use(express.urlencoded({extended: true}));
 app.use(express.static( __dirname + '/public/dist/public' ));
+app.use(bodyParser.json());
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/client/views');
@@ -38,6 +40,7 @@ const Task = mongoose.model('Task', TaskSchema);
 
 
 app.get('/tasks', (request, response) => {
+    console.log("__________________________________________________________")
     Task.find({})
         .then(tasks => response.json(tasks))
         .catch(err => response.json(err));
@@ -53,7 +56,7 @@ app.get('/tasks/:id', (request, response) => {
 });
 
 app.put('/tasks/:id', (request, response) => {
-    
+    console.log("task in server: ", request.body)
     Task.updateOne({_id:request.params.id}, {$set: request.body})
         .then(task => response.json(task))
         .catch(err => response.json(err));
@@ -61,7 +64,7 @@ app.put('/tasks/:id', (request, response) => {
 });
 
 app.delete('/tasks/:id', (request, response) => {
-    
+    console.log("deleying task ", request.params.id)
     Task.deleteOne({_id:request.params.id}, {$set: request.body})
         .then(task => response.json(task))
         .catch(err => response.json(err));
@@ -70,7 +73,7 @@ app.delete('/tasks/:id', (request, response) => {
 
 app.delete('/tasks/', (request, response) => {
     
-    Task.deleteMany({description:""})
+    Task.deleteMany({description: ""})
         .then(task => response.json(task))
         .catch(err => response.json(err));
 
@@ -78,6 +81,7 @@ app.delete('/tasks/', (request, response) => {
 
 
 app.post('/tasks', (request, response) => {
+    console.log("server post route happening", request.body)
         Task.create(request.body)
             .then(tasks => response.json(tasks))
             .catch(err => response.json(err)); 

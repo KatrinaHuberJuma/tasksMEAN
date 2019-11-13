@@ -10,11 +10,13 @@ import {NgForm} from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'task';
   tasks = [];
-  currentTask = false;
+  displayEdit = false;
+  currentTask = { title:"", description:""}
+
   constructor(private _httpService: HttpService){}
 
   ngOnInit(){
-    this.getTasksFromService()
+    // this.getTasksFromService()
   }
   getTasksFromService(){
     let observable = this._httpService.getTasks()
@@ -24,28 +26,46 @@ export class AppComponent implements OnInit {
   }
 
   getOneTaskFromService(id){
+    console.log("getting one task")
     let observable = this._httpService.getOneTask(id)
     observable.subscribe(data => {
       console.log(data)
       this.currentTask = data[0];
+      this.displayEdit = true;
     });
   }
 
-  onSubmit(f: NgForm) {
-    if (f.valid){
-      
-    }
-    console.log(f.value);  // { first: '', last: '' }
-    console.log(f.valid);  // false
+  deleteOneTaskFromService(id){
+    console.log("getting one task")
+    let observable = this._httpService.deleteOneTask(id)
+    observable.subscribe(data => {
+    });
   }
 
-  // onEditSubmit(id){
-  //   let observable = this._httpService.getOneTask(id)
-  //   observable.subscribe(data => {
-  //     // console.log(data)
-  //     // this.currentTask = data[0];
-  //   });
-  // }
+  onSubmit(){
+    if (this.displayEdit){
+      this.onEditSubmit()
+    } else {
+      this.onCreateSubmit()
+    }
+  }
+
+  onCreateSubmit(){
+    console.log("task in component: ", this.currentTask)
+    let observable = this._httpService.createTask(this.currentTask)
+    observable.subscribe(data => {
+      this.displayEdit = false;
+      this.currentTask = { title:"", description:""};
+    })
+  }
+
+  onEditSubmit(){
+    console.log("task in component: ", this.currentTask)
+    let observable = this._httpService.editOneTask(this.currentTask)
+    observable.subscribe(data => {
+      this.currentTask = { title:"", description:""};
+    })
+  }
 }
 
 

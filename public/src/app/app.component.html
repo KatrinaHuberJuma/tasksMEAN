@@ -1,20 +1,25 @@
  <button (click)="getTasksFromService()">see tasks</button>
 
     <ul>
-      <li *ngFor="let task of tasks">{{task.title}} <button (click)="getOneTaskFromService(task._id)">edit task</button>
+      <li *ngFor="let task of tasks">{{task.title}} {{task.description}}<button (click)="getOneTaskFromService(task._id)">edit task</button><button (click)="deleteOneTaskFromService(task._id)">delete task</button>
 </li>
     </ul>
 
+<div *ngIf="displayEdit; then editing; else creating">
+</div>
+<ng-template #editing>
+  <h2>Edit Task</h2>
+</ng-template>
+<ng-template #creating>
+  <h2>Create Task</h2>
+</ng-template>
+  
+  <form (submit)="onSubmit()">
+    <input type="text" name="title" [(ngModel)]="currentTask.title" />
+    <input type="text" name="description" [(ngModel)]="currentTask.description" />
+    <input type="submit" value="Edit Task" />
+  </form>
 
 
-<!--<form *ngIf="currentTask" action="">
-  <input type="text" name="title" [value]="currentTask.title">
-  <input type="text" name="description" [value]="currentTask.description">
-  <input type="submit" value="Submit" >
-</form>-->
-<form *ngIf="currentTask" #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
-    <input name="title" ngModel required #title="ngModel">
-    <input name="description" ngModel>
-    <button>Submit</button>
-</form>
-    
+
+
