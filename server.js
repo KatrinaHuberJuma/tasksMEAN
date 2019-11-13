@@ -15,7 +15,7 @@ app.set('views', __dirname + '/client/views');
 // =============================================
 // CONNECT TO DATABASE (remember to rename)
 // =============================================
-mongoose.connect('mongodb://localhost/tasks', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/tasks');
 // =============================================
 // SCHEMA
 // =============================================
@@ -25,9 +25,9 @@ const TaskSchema = new mongoose.Schema({
         minlength: 3
     },
     description: { type: String,
-        default: ""
+        minlength: 3
     },
-    completed: {type: Boolean, 
+    completed: { type: Boolean, 
         default: false
     }
 }, {timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }})
@@ -38,7 +38,6 @@ const Task = mongoose.model('Task', TaskSchema);
 
 
 app.get('/tasks', (request, response) => {
-    console.log("-----------------------------------server get route called")
     Task.find({})
         .then(tasks => response.json(tasks))
         .catch(err => response.json(err));
@@ -64,6 +63,14 @@ app.put('/tasks/:id', (request, response) => {
 app.delete('/tasks/:id', (request, response) => {
     
     Task.deleteOne({_id:request.params.id}, {$set: request.body})
+        .then(task => response.json(task))
+        .catch(err => response.json(err));
+
+});
+
+app.delete('/tasks/', (request, response) => {
+    
+    Task.deleteMany({description:""})
         .then(task => response.json(task))
         .catch(err => response.json(err));
 
